@@ -1,0 +1,11 @@
+h1 {
+    /*background-color: red;*/
+    text-align: center;
+}
+
+#index_logo {
+    display: block;
+    margin: auto auto auto auto;
+    width: 50%;
+}
+

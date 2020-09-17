@@ -1,0 +1,23 @@
+{
+  "name": "reffer",
+  "version": "1.0.0",
+  "description": "<small>*In 5-10 sentences, describe the objective of your web application. What is it? What will it do? As you write this, remember that all code written for the homework and the project must be your own work and cannot have been developed for a previous course or project.* </small>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bboss29/neiu-cs-412.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bboss29/neiu-cs-412/issues"
+  },
+  "homepage": "https://github.com/bboss29/neiu-cs-412#readme",
+  "dependencies": {
+    "browserify": "^16.5.2"
+  }
+}
