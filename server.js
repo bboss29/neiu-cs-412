@@ -1,11 +1,13 @@
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
+let requestCount = 0;
 
 let app = http.createServer((request, response ) => {
     let now = new Date()
-    let ts = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
-    console.log(`[${ts}] Request starting...`, request.url)
+    let ts = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds().toPrecision(2);
+    requestCount++;
+    console.log(`[${ts}] [${requestCount}] Request starting...`, request.url)
 
     let filePath = '.' + request.url
     if (filePath === './')
@@ -22,7 +24,6 @@ let app = http.createServer((request, response ) => {
             }
         } else {
             let filetype = filePath.split('.').pop()
-            // console.log(filetype)
             switch (filetype) {
                 case "js":
                     response.setHeader('Content-Type', 'text/javascript')

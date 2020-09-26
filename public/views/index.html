@@ -7,21 +7,17 @@
     <!-- It should prevent the favicon icon from being automatically loaded.-->
     <link rel="icon" href="data:;base64,=">
     <link rel="stylesheet" type="text/css" href="/public/css/style.css">
-<!--    <script src="public/js/collection_metadata.js"></script>-->
-    <script src="public/js/lib/module.js"></script>
-    <script>
-        printWorkInfo()
-        printCollectionInfo()
-        printLinkInfo()
+
+    <script type="text/javascript" src="/public/js/lib/module.js"></script>
+<!--    <script src="/public/js/lib/r.js" data-main="/public/js/lib/bundle.js"></script>-->
+    <script type="text/javascript" >
+        collection_md.printCollectionInfo()
     </script>
 </head>
 <body>
     <!--It should have a header tag in the body that has the name of your Application -->
     <h1>Reffer</h1>
-    <!--It should have an image for your application. This image should be located in the-->
-    <!--images directory. See here for how to add an image in html. What do you have to do in-->
-    <!--your server.js code to get the image to render? (Hint: What is the content type of an-->
-    <!--image?).-->
+    <!--It should have an image for your application. -->
     <img id="index_logo" src="/public/images/logo_wip.png" alt="logo_wip">
 </body>
 </html>
