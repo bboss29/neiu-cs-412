@@ -1,6 +1,6 @@
 // JS File 2
 
-const w = require('./work_md')
+const w = require('./work')
 w.printWorkInfo()
 
 let printLinkInfo = function (){

@@ -1,6 +1,9 @@
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
+const httpCodes = require('http-status-codes')
+const mime = require('mime-types')
+
 let requestCount = 0;
 
 let app = http.createServer((request, response ) => {
@@ -16,7 +19,7 @@ let app = http.createServer((request, response ) => {
     fs.readFile(filePath, function (error, content) {
         if (error) {
             if (!fs.existsSync(filePath)) { // if file not found in path
-                response.writeHead(404)
+                response.writeHead(httpCodes.NOT_FOUND)
                 response.end()
             } else {
                 response.writeHead(500)
