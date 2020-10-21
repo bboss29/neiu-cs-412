@@ -10,7 +10,7 @@ type Query {
 type Mutation {
     createWork(name: String): Work
     createLink(desc: String, workIDs: [Int]): Work
-    addWorksToLink(linkID: Int, workIDs: [Int]): Link
+    linkUp(linkID: Int, workIDs: [Int]): Link
 }
 
 type Work {
@@ -31,16 +31,7 @@ type Link {
 `)
 
 let db = {
-    "works": [
-        {
-            id: 0,
-            name: 'show'
-        },
-        {
-            id: 1,
-            name: 'new show'
-        }
-    ],
+    "works": [],
     "links" : []
 }
 
@@ -72,7 +63,7 @@ const resolvers = {
         return link
     },
 
-    addWorksToLink: ({linkID, workIDs}) => {
+    linkUp: ({linkID, workIDs}) => {
         for (let w = 0; w < workIDs.length; w++) {
             db["links"][linkID].works.push(db["works"][workIDs[w]])
         }
@@ -87,24 +78,51 @@ function createWork(name) {
 
 // create a link
 function createLink(desc, wIDs) {
-    graphql(schema, `mutation { createLink(desc: ${desc}, workIDs: ${wIDs}) {id} }`, resolvers).then()
+    graphql(schema, `mutation { createLink(desc: "${desc}", workIDs: [${wIDs}]) {id} }`, resolvers).then((response) => {
+        // console.log(response)
+    })
 }
 
 // add a work to a link
 function linkUp(lID, wIDs) {
-    graphql(schema, `mutation { addWorksToLink(linkID: ${lID}, workIDs: ${wIDs}) {id} }`, resolvers).then()
+    graphql(schema, `mutation { linkUp(linkID: ${lID}, workIDs: [${wIDs}]) {id} }`, resolvers).then((response) => {
+        // console.log(response)
+    })
 }
 
 // show links
 function showLinks() {
     graphql(schema, `{ links { id desc works { name } } }`, resolvers).then((response) => {
-        console.log(response.data.links)
+        console.log("All Links: ")
+        let l = response.data.links
+        for (let i = 0; i < l.length; i++) {
+            console.log(`\tLink ${l[i].id}: ${l[i].desc}`)
+            for (let w = 0; w < l[i].works.length; w++) {
+                console.log("\t\t" + l[i].works[w].name)
+            }
+        }
     })
 }
 
 // show works
 function showWorks() {
-    graphql(schema, `{ works { name } }`, resolvers).then((response) => {
-        console.log(response.data.works)
+    graphql(schema, `{ works { id name } }`, resolvers).then((response) => {
+        let w = response.data.works
+        // let html = "<h1> All Works </h1><ul>"
+        console.log("All Works: ")
+        for (let i = 0; i < w.length; i++) {
+            // html += "<li>${w[i][\"name\"]}</li>"
+            console.log("\t" + w[i]["name"])
+        }
+        console.log()
+        // return html + "</ul>"
     })
+}
+
+module.exports = {
+    createWork : createWork,
+    showWorks : showWorks,
+    showLinks : showLinks,
+    createLink : createLink,
+    linkUp : linkUp,
 }

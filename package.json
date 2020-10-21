@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/bboss29/neiu-cs-412#readme",
   "dependencies": {
+    "axios": "^0.20.0",
     "browserify": "^16.5.2",
     "express": "^4.17.1",
     "express-graphql": "^0.11.0",
