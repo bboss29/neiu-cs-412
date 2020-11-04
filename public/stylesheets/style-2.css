@@ -8,3 +8,18 @@ h1 {
     width: 50%;
 }
 
+#nav {
+    text-align: center;
+}
+
+.center {
+    text-align: center;
+}
+
+ul {
+    padding-left: 0;
+}
+
+li {
+    list-style-type:none;
+}

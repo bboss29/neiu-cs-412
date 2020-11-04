@@ -5,8 +5,13 @@ const cookieParser = require('cookie-parser')
 const http = require('http')
 const hbs = require('express-handlebars')
 
+const inMemoryWorksStore = require('./models/works-memory').InMemoryWorksStore
+let worksStore = new inMemoryWorksStore()
+exports.worksStore = worksStore
+
 const appsupport = require('./appsupport')
 const indexRouter = require('./routes/index')
+const worksRouter = require('./routes/works')
 
 const app = express()
 exports.app = app
@@ -30,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // router function lists
 app.use('/', indexRouter)
+app.use('/works', worksRouter)
 
 // error handlers
 app.use(appsupport.basicErrorHandler)

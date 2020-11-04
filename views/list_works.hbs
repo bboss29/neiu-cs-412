@@ -1,0 +1,13 @@
+<table style="margin: auto;">
+    {{#each workList}}
+        {{#if workTitle}}
+            <tr onclick="window.location='/works/view?workKey={{ workKey }}'">
+                <td>{{ workType }}</td>
+                <td width="20px">|</td>
+                <td><a href="/works/view?workKey={{ workKey }}">{{ workTitle }}</a></td>
+            </tr>
+        {{/if}}
+    {{else}}
+        <h2>There are no works stored</h2>
+    {{/each}}
+</table>

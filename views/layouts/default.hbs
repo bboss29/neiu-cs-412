@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{ title }}</title>
+    <title>{{ projectName }}</title>
       {{#each styles}}
           <link rel="stylesheet" href={{ this }} />
       {{/each}}
@@ -9,23 +9,24 @@
 
       <script type="text/javascript" src="/javascripts/lib/module.js"></script>
       <script type="text/javascript" >
-          collection.printCollectionInfo()
-          collection.showWorks()
-          collection.createWork("show")
-          collection.createWork("new show")
-          collection.createWork("another show")
-          collection.createWork("yet another show")
-          collection.showWorks()
-
-          collection.createLink("{this explains the connection between these two works}", [0])
-          collection.linkUp(0, [1])
-
-          collection.createLink("{this explains how these four works are connected}", [0,1])
-          collection.linkUp(1, [2,3])
-          collection.showLinks()
+          // collection.printCollectionInfo()
+          // collection.showWorks()
+          // collection.createWork("show")
+          // collection.createWork("new show")
+          // collection.createWork("another show")
+          // collection.createWork("yet another show")
+          // collection.showWorks()
+          //
+          // collection.createLink("{this explains the connection between these two works}", [0])
+          // collection.linkUp(0, [1])
+          //
+          // collection.createLink("{this explains how these four works are connected}", [0,1])
+          // collection.linkUp(1, [2,3])
+          // collection.showLinks()
       </script>
   </head>
   <body>
+    {{> header }}
     {{{ body }}}
   </body>
 </html>

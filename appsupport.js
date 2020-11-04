@@ -56,5 +56,10 @@ exports.onListening = function () {
     let bind = typeof addr === 'string'
         ? 'pipe ' + addr
         : 'port ' + addr.port;
-    console.log('Listening on ' + bind);
+
+    let now = new Date()
+    let ts = now.getHours().toPrecision(2) % 12 + ':'
+        + now.getMinutes().toPrecision(2) + ':'
+        + now.getSeconds().toPrecision(2)
+    console.log(`[${ts}] Listening on ${bind} http://localhost:3000/`);
 }
