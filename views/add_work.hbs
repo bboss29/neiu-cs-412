@@ -1,10 +1,9 @@
 <form method="post" action="/works/save" class="center">
     <p>
-        Key: {{ workKey }}
         <input type="hidden" name="workKey" value="{{ workKey }}" />
         <input type="hidden" name="action" value="{{ action }}" />
     </p>
-    <div>
+    <div style="margin: auto auto 10px auto">
         <input type="text" name="workTitle" placeholder="Title of the Work" required/>
         <select name="workType" required>
             <option value="" disabled selected>Type</option>
@@ -13,6 +12,6 @@
             <option value="TV Show">TV Show</option>
         </select>
     </div>
-    <textarea rows="5" cols="40" name="workBody" placeholder="Details About the Work" required></textarea> <br/>
-    <input type="submit" value="Submit"/>
+    <textarea rows="10" cols="40" name="workBody" placeholder="Details About the Work" required></textarea> <br/>
+    <input class="btn btn-primary" type="submit" value="Create"/>
 </form>

@@ -3,9 +3,8 @@
         <input type="hidden" name="workKey" value="{{ workKey }}" />
         <input type="hidden" name="action" value="{{ action }}" />
     </p>
-    <h2>Delete this Work?</h2>
     <h3>{{ workTitle }}</h3>
     <p>Type: {{ workType }}</p>
     <p>{{ workBody }}</p>
-    <input type="submit" value="Delete"/>
+    <input class="btn btn-danger" type="submit" value="Delete"/>
 </form>

@@ -2,10 +2,9 @@
 <h3>{{ workTitle }}</h3>
 <p>{{ workType }}</p>
 <p>{{ workBody }}</p>
-<p> Key: {{ workKey }}</p>
 <hr/>
 <p>
-    <span><a href="/works/edit?workKey={{ workKey }}">Edit Work</a></span>
-    <span><a href="/works/delete?workKey={{ workKey }}">Delete Work</a></span>
+    <span><a class="btn btn-primary" href="/works/edit?workKey={{ workKey }}">Update <i data-feather="edit"></i></a></span>
+    <span><a class="btn btn-danger" href="/works/delete?workKey={{ workKey }}">Delete <i data-feather="trash-2"></i></a></span>
 </p>
 </div>

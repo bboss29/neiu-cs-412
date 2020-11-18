@@ -3,7 +3,7 @@ const router = express.Router();
 let worksStore = require('../app').worksStore
 
 let options = {
-    projectName: 'Reffer',
+    projectName: 'REFFER',
     layout: 'default',
     styles: [
         '../stylesheets/style.css',
@@ -17,6 +17,8 @@ router.get('/add', async (req, res, next) => {
         res.render('add_work', Object.assign(options, {
             action: "add",
             title: 'Add a Work',
+            navAdd: true,
+            navView: false,
             workKey: await worksStore.count()
         }))
     } catch (err) {
@@ -65,11 +67,13 @@ router.get('/view', async (req, res, next) => {
     try {
         let work = await worksStore.read(req.query.workKey)
         res.render('view_work', Object.assign(options,{
-            title: "View Work",
+            title: "Work Details",
             workTitle: work.title,
             workKey: work.key,
             workBody: work.body,
-            workType: work.type
+            workType: work.type,
+            navAdd: false,
+            navView: false,
         }))
     } catch (err) {
         next(err)
@@ -82,11 +86,14 @@ router.get('/edit', async (req, res, next) => {
         let work = await worksStore.read(req.query.workKey)
         res.render('edit_work', Object.assign(options, {
             action: "edit",
-            title: "Edit a Work",
+            title: "Update",
             workTitle: work.title,
             workKey: work.key,
             workBody: work.body,
-            workType: work.type
+            workType: work.type,
+            isBook: work.type === "Book",
+            isMovie: work.type === "Movie",
+            isTVShow: work.type === "TV Show"
         }))
     } catch (err) {
         next(err)
@@ -103,6 +110,8 @@ router.get('/list', async function(req, res, next) {
         let allWorks = await Promise.all(keyPromises)
         res.render('list_works', Object.assign(options,{
             title: "List of Works",
+            navView: true,
+            navAdd: false,
             workList: extractWorksToLiteral(allWorks)
         }))
     } catch (err) {
@@ -126,7 +135,7 @@ router.get('/delete', async (req, res, next) => {
         let work = await worksStore.read(req.query.workKey)
         res.render('delete_work', Object.assign(options,{
             action: "delete",
-            title: "Delete a Work",
+            title: "Delete this Work?",
             workTitle: work.title,
             workKey: work.key,
             workBody: work.body,

@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 let options = {
-    projectName: 'Reffer',
+    projectName: 'REFFER',
     layout: 'default',
     styles: [
       '../stylesheets/style.css',
       '../stylesheets/style-2.css'
     ],
-    title: "Welcome to Reffer"
+    title: "Home"
 }
 
 router.get('/', async function(req, res, next) {

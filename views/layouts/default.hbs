@@ -5,10 +5,14 @@
       {{#each styles}}
           <link rel="stylesheet" href={{ this }} />
       {{/each}}
-      <link rel="icon" href="data:;base64,=">
+      <!--<link rel="icon" href="data:;base64,=">-->
 
-      <script type="text/javascript" src="/javascripts/lib/module.js"></script>
-      <script type="text/javascript" >
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css"/>
+
+<!--      <script type="text/javascript" src="javascripts/lib/module.js"></script>-->
+<!--      <script type="text/javascript" >
           // collection.printCollectionInfo()
           // collection.showWorks()
           // collection.createWork("show")
@@ -23,10 +27,19 @@
           // collection.createLink("{this explains how these four works are connected}", [0,1])
           // collection.linkUp(1, [2,3])
           // collection.showLinks()
-      </script>
+      </script>-->
   </head>
   <body>
     {{> header }}
-    {{{ body }}}
+    <div class="container-fluid">
+        {{{ body }}}
+    </div>
   </body>
+  <script src="/assets/vendor/jquery/jquery.min.js"></script>
+  <script src="/assets/vendor/popper.js/popper.min.js"></script>
+  <script src="/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/assets/vendor/feather-icons/feather.min.js"></script>
+  <script>
+      feather.replace()
+  </script>
 </html>
