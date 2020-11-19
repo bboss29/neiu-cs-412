@@ -103,11 +103,7 @@ router.get('/edit', async (req, res, next) => {
 // A route for viewing all saved items
 router.get('/list', async function(req, res, next) {
     try {
-        let keyList = await worksStore.keyList()
-        let keyPromises = keyList.map(key => {
-            return worksStore.read(key)
-        })
-        let allWorks = await Promise.all(keyPromises)
+        let allWorks = await worksStore.findAllWorks()
         res.render('list_works', Object.assign(options,{
             title: "List of Works",
             navView: true,

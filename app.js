@@ -6,8 +6,8 @@ const http = require('http')
 const hbs = require('express-handlebars')
 const feather = require('feather-icons')
 
-const inMemoryWorksStore = require('./models/works-memory').InMemoryWorksStore
-let worksStore = new inMemoryWorksStore()
+const MongooseWorksStore = require('./models/works-mongoose').MongooseWorksStore
+let worksStore = new MongooseWorksStore()
 exports.worksStore = worksStore
 
 const appsupport = require('./appsupport')
