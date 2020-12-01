@@ -1,4 +1,4 @@
-exports.AbstractWorksStore = class AbstractWorksStore {
+exports.AbstractWorksStore = class   {
     async close() { }
     async update(key, title, body, type) { }
     async create(key, title, body, type) { }
@@ -11,9 +11,7 @@ exports.AbstractWorksStore = class AbstractWorksStore {
 const mongoose = require('mongoose')
 const WorkSchema = new mongoose.Schema({
     key: {
-        type: Number,
-        required: true,
-        unique: true
+        type: String
     },
     title: {
         type: String,
@@ -27,6 +25,15 @@ const WorkSchema = new mongoose.Schema({
     type: {
         type: String,
         required: [true, 'Work type is required']
+    }
+})
+
+WorkSchema.pre('save', async function(next){ // thought it would be post
+    let work = this
+    try {
+        work.key = work._id
+    } catch (error) {
+        console.log(`${error.message}`)
     }
 })
 

@@ -1,18 +1,27 @@
 const express = require('express')
 const path = require('path')
 const logger = require('morgan')
-const cookieParser = require('cookie-parser')
 const http = require('http')
 const hbs = require('express-handlebars')
 const feather = require('feather-icons')
+const session = require('express-session')
+const MemoryStore = require('memorystore')(session)
+const connectFlash = require('connect-flash')
 
-const MongooseWorksStore = require('./models/works-mongoose').MongooseWorksStore
-let worksStore = new MongooseWorksStore()
-exports.worksStore = worksStore
+const mongoose = require('mongoose')
+mongoose.connect(process.env.DB_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true
+    }
+).catch(err => {
+    console.log(err)
+})
 
 const appsupport = require('./appsupport')
 const indexRouter = require('./routes/index')
 const worksRouter = require('./routes/works')
+const usersRouter = require('./routes/users')
 
 const app = express()
 exports.app = app
@@ -30,16 +39,32 @@ app.engine('hbs', hbs({
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(cookieParser())
+app.use(session({
+    secret: process.env.session_key,
+    cookie: {maxAge: 86400000},
+    store: new MemoryStore({
+        checkPeriod: 86400000
+    }),
+    resave: false,
+    saveUninitialized: false
+}))
+app.use(connectFlash())
+
 app.use(express.static(path.join(__dirname, 'public', 'assets')))
 app.use('/assets/vendor/bootstrap', express.static(path.join(__dirname, 'node_modules', 'bootstrap', 'dist')))
 app.use('/assets/vendor/jquery', express.static(path.join(__dirname, 'node_modules', 'jquery', 'dist')))
 app.use('/assets/vendor/popper.js', express.static(path.join(__dirname, 'node_modules', 'popper.js', 'dist', 'umd')))
 app.use('/assets/vendor/feather-icons', express.static(path.join(__dirname, 'node_modules', 'feather-icons', 'dist')))
 
+app.use((req, res, next) => {
+    res.locals.flashMessages = req.flash()
+    next()
+})
+
 // router function lists
 app.use('/', indexRouter)
 app.use('/works', worksRouter)
+app.use('/users', usersRouter)
 
 // error handlers
 app.use(appsupport.basicErrorHandler)
