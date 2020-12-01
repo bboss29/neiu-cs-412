@@ -1,0 +1,11 @@
+<div class="container-fluid m-2">
+    <div class="row justify-content-center m-2">
+        {{#if flashMessages}}
+            {{#if flashMessages.success}}
+                <span class="text-success text-center">{{{flashMessages.success}}}</span>
+            {{else}}
+                <span class="text-danger text-center">{{{flashMessages.error}}}</span>
+            {{/if}}
+        {{/if}}
+    </div>
+</div>

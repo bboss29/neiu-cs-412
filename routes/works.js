@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-let worksStore = require('../app').worksStore
+const { workController } = require('../controllers/work-controller')
 
 let options = {
     projectName: 'REFFER',
@@ -14,59 +14,26 @@ let options = {
 // route for creating a new item
 router.get('/add', async (req, res, next) => {
     try {
-        res.render('add_work', Object.assign(options, {
+        res.render('works/add_work', Object.assign(options, {
             action: "add",
             title: 'Add a Work',
             navAdd: true,
             navView: false,
-            workKey: await worksStore.count()
+            workKey: await workController.count() // worksStore.count()
         }))
     } catch (err) {
         next(err)
     }
 })
-
-router.post('/save', async (req, res, next) => {
-    try {
-        switch (req.body.action) {
-            case "add":
-                await worksStore.create(
-                    req.body.workKey,
-                    req.body.workTitle,
-                    req.body.workBody,
-                    req.body.workType
-                )
-                res.redirect('/works/view?workKey=' + req.body.workKey)
-                break;
-            case "edit":
-                await worksStore.update(
-                    req.body.workKey,
-                    req.body.workTitle,
-                    req.body.workBody,
-                    req.body.workType
-                )
-                res.redirect('/works/view?workKey=' + req.body.workKey)
-                break;
-            case "delete":
-                await worksStore.update(
-                    req.body.workKey,
-                    req.body.workTitle,
-                    req.body.workBody,
-                    req.body.workType
-                )
-                res.redirect('/works/list')
-                break;
-        }
-    } catch (err) {
-        next(err)
-    }
+router.post('/add', async (req, res, next) => {
+    await workController.create(req, res, next)
 })
 
 // A route for viewing one specific item.
 router.get('/view', async (req, res, next) => {
     try {
-        let work = await worksStore.read(req.query.workKey)
-        res.render('view_work', Object.assign(options,{
+        let work = await workController.read(req.query.workKey)
+        res.render('works/view_work', Object.assign(options,{
             title: "Work Details",
             workTitle: work.title,
             workKey: work.key,
@@ -83,8 +50,8 @@ router.get('/view', async (req, res, next) => {
 // A route for editing a specific item.
 router.get('/edit', async (req, res, next) => {
     try {
-        let work = await worksStore.read(req.query.workKey)
-        res.render('edit_work', Object.assign(options, {
+        let work = await workController.read(req.query.workKey)
+        res.render('works/edit_work', Object.assign(options, {
             action: "edit",
             title: "Update",
             workTitle: work.title,
@@ -99,12 +66,15 @@ router.get('/edit', async (req, res, next) => {
         next(err)
     }
 })
+router.post('/edit', async (req, res, next) => {
+    await workController.update(req, res, next)
+})
 
 // A route for viewing all saved items
 router.get('/list', async function(req, res, next) {
     try {
-        let allWorks = await worksStore.findAllWorks()
-        res.render('list_works', Object.assign(options,{
+        let allWorks = await workController.findAllWorks()
+        res.render('works/list_works', Object.assign(options,{
             title: "List of Works",
             navView: true,
             navAdd: false,
@@ -115,21 +85,11 @@ router.get('/list', async function(req, res, next) {
     }
 })
 
-function extractWorksToLiteral(allWorks) {
-    return allWorks.map(work => {
-        return {
-            workKey : work.key,
-            workTitle: work.title,
-            workType: work.type
-        }
-    })
-}
-
 // A route for deleting a specific item
 router.get('/delete', async (req, res, next) => {
     try {
-        let work = await worksStore.read(req.query.workKey)
-        res.render('delete_work', Object.assign(options,{
+        let work = await workController.read(req.query.workKey)
+        res.render('works/delete_work', Object.assign(options,{
             action: "delete",
             title: "Delete this Work?",
             workTitle: work.title,
@@ -141,5 +101,18 @@ router.get('/delete', async (req, res, next) => {
         next(err)
     }
 })
+router.post('/delete', async (req, res, next) => {
+    await workController.destroy(req, res, next)
+})
+
+function extractWorksToLiteral(allWorks) {
+    return allWorks.map(work => {
+        return {
+            workKey : work.key,
+            workTitle: work.title,
+            workType: work.type
+        }
+    })
+}
 
 module.exports = router
