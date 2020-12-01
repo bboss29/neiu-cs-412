@@ -10,9 +10,6 @@ exports.AbstractWorksStore = class   {
 
 const mongoose = require('mongoose')
 const WorkSchema = new mongoose.Schema({
-    key: {
-        type: String
-    },
     title: {
         type: String,
         required: [true, 'Title is required'].length,
@@ -25,15 +22,6 @@ const WorkSchema = new mongoose.Schema({
     type: {
         type: String,
         required: [true, 'Work type is required']
-    }
-})
-
-WorkSchema.pre('save', async function(next){ // thought it would be post
-    let work = this
-    try {
-        work.key = work._id
-    } catch (error) {
-        console.log(`${error.message}`)
     }
 })
 
