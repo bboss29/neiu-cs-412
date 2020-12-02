@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const SchemaTypes = mongoose.SchemaTypes
-const bcrypt = require('bcrypt')
+const passportLocalMongoose = require('passport-local-mongoose')
 
 const UserSchema = new Schema({
     username: {
@@ -9,10 +9,6 @@ const UserSchema = new Schema({
         trim: true,
         required: [true, 'Email is required'],
         unique: true
-    },
-    password: {
-        type: String,
-        required: [true, 'Password is required']
     },
     isAdmin: {
         type: Boolean
@@ -25,20 +21,20 @@ const UserSchema = new Schema({
     ]
 })
 
+UserSchema.set('toJSON', { getters: true, virtuals: true })
+UserSchema.set('toObject', { getters: true, virtuals: true })
+
+UserSchema.plugin(passportLocalMongoose, {
+    usernameField: 'username'
+})
+
 UserSchema.pre('save', async function(next){
     let user = this
     try {
-        user.password = await bcrypt.hash(user.password, 10)
-        if (!user.isAdmin)
-            user.isAdmin = false
+        if (!user.isAdmin) user.isAdmin = false
     } catch (error) {
         console.log(`Error in hashing password: ${error.message}`)
     }
 })
-
-UserSchema.methods.passwordComparison = async function(inputPassword) {
-    let user = this
-    return await bcrypt.compare(inputPassword, user.password)
-}
 
 exports.User = mongoose.model('users', UserSchema)

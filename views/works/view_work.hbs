@@ -3,8 +3,10 @@
 <p>{{ workType }}</p>
 <p>{{ workBody }}</p>
 <hr/>
+{{#if isMine}}
 <p>
     <span><a class="btn btn-primary" href="/works/edit?workKey={{ workKey }}">Update <i data-feather="edit"></i></a></span>
     <span><a class="btn btn-danger" href="/works/delete?workKey={{ workKey }}">Delete <i data-feather="trash-2"></i></a></span>
 </p>
+{{/if}}
 </div>

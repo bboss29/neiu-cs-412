@@ -1,5 +1,5 @@
 let Work = require('../models/works').Work
-const {body, validationResult} = require('express-validator')
+let { User } = require('../models/users')
 
 let options = {
     projectName: 'REFFER',
@@ -24,6 +24,8 @@ exports.workController = {
     create: async (req, res, next) => {
         let workParams = getWorkParams(req.body)
         let work = await Work.create(workParams)
+        req.user.works.push(work.id.trim())
+        req.user = await User.findByIdAndUpdate({ _id: req.user.id.trim() }, { works: req.user.works }, { new:true })
         req.flash('success', `${work.title} created successfully`)
         res.redirect('/works/view?workKey=' + work.id)
     },
@@ -35,28 +37,36 @@ exports.workController = {
     },
 
     add: async (req, res, next) => {
-        try {
-            res.render('works/add_work', Object.assign(options, {
-                action: "add",
-                title: 'Add a Work',
-                navAdd: true,
-                navView: false,
-                workKey: await Work.countDocuments({})
-            }))
-        } catch (err) {
-            next(err)
+        if (req.isAuthenticated()) {
+            try {
+                res.render('works/add_work', Object.assign(options, {
+                    action: "add",
+                    title: 'Add a Work',
+                    navAdd: true,
+                    navView: false,
+                    workKey: await Work.countDocuments({})
+                }))
+            } catch (err) {
+                next(err)
+            }
+        } else {
+            req.flash('error', 'Please log in to access this page')
+            res.redirect('../users/login')
         }
     },
 
     view: async (req, res, next) => {
         try {
             let work = await Work.findOne({_id: req.query.workKey.trim()})
+            let isMine = req.isAuthenticated()
+            if (isMine) isMine = req.user.works.includes(work.id)
             res.render('works/view_work', Object.assign(options,{
                 title: "Work Details",
                 workTitle: work.title,
                 workKey: work.id,
                 workBody: work.body,
                 workType: work.type,
+                isMine: isMine,
                 navAdd: false,
                 navView: false,
             }))
@@ -67,32 +77,40 @@ exports.workController = {
     },
 
     edit: async (req, res, next) => {
-        try {
-            let work = await Work.findOne({_id: req.query.workKey.trim()})
-            res.render('works/edit_work', Object.assign(options, {
-                action: "edit",
-                title: "Update",
-                workTitle: work.title,
-                workKey: work.id,
-                workBody: work.body,
-                workType: work.type,
-                isBook: work.type === "Book",
-                isMovie: work.type === "Movie",
-                isTVShow: work.type === "TV Show"
-            }))
-        } catch (err) {
-            next(err)
+        if (req.isAuthenticated()) {
+            try {
+                let work = await Work.findOne({_id: req.query.workKey.trim()})
+                res.render('works/edit_work', Object.assign(options, {
+                    action: "edit",
+                    title: "Update",
+                    workTitle: work.title,
+                    workKey: work.id,
+                    workBody: work.body,
+                    workType: work.type,
+                    isBook: work.type === "Book",
+                    isMovie: work.type === "Movie",
+                    isTVShow: work.type === "TV Show"
+                }))
+            } catch (err) {
+                next(err)
+            }
+        } else {
+            req.flash('error', 'Please log in to access this page')
+            res.redirect('../users/login')
         }
     },
 
-    list: async (req, res, next) => {
+    listAll: async (req, res, next) => {
         try {
             const works = await Work.find({})
             let allWorks = works.map(work => {
+                let isMine = req.isAuthenticated()
+                if (isMine) isMine = req.user.works.includes(work.id)
                 return {
                     workKey: work.id,
                     workTitle: work.title,
-                    workType: work.type
+                    workType: work.type,
+                    isMine: isMine
                 }
             })
             res.render('works/list_works', Object.assign(options,{
@@ -106,19 +124,46 @@ exports.workController = {
         }
     },
 
+    listMine: async (req, res, next) => {
+        if (req.isAuthenticated()) {
+            try {
+                let workIds = req.user.works
+                let workPromises = workIds.map(id => Work.findOne({ _id: id }))
+                let works = await Promise.all(workPromises)
+                return works.map(work => {
+                    return {
+                        workKey: work.id,
+                        workTitle: work.title,
+                        workType: work.type
+                    }
+                })
+            } catch (err) {
+                next(err)
+            }
+        } else {
+            req.flash('error', 'Please log in to access this page')
+            res.redirect('../users/login')
+        }
+    },
+
     delete: async (req, res, next) => {
-        try {
-            let work = await Work.findOne({_id: req.query.workKey.trim()})
-            res.render('works/delete_work', Object.assign(options,{
-                action: "delete",
-                title: "Delete this Work?",
-                workTitle: work.title,
-                workKey: work.id,
-                workBody: work.body,
-                workType: work.type
-            }))
-        } catch (err) {
-            next(err)
+        if (req.isAuthenticated()) {
+            try {
+                let work = await Work.findOne({_id: req.query.workKey.trim()})
+                res.render('works/delete_work', Object.assign(options,{
+                    action: "delete",
+                    title: "Delete this Work?",
+                    workTitle: work.title,
+                    workKey: work.id,
+                    workBody: work.body,
+                    workType: work.type
+                }))
+            } catch (err) {
+                next(err)
+            }
+        } else {
+            req.flash('error', 'Please log in to access this page')
+            res.redirect('../users/login')
         }
     }
 }

@@ -25,7 +25,7 @@ router.post('/edit', async (req, res, next) => {
 
 // A route for viewing all saved items
 router.get('/list', async function(req, res, next) {
-    await workController.list(req, res, next)
+    await workController.listAll(req, res, next)
 })
 
 // A route for deleting a specific item
