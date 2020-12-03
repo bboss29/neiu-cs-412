@@ -1,13 +1,31 @@
-let Work = require('../models/works').Work
+let { Work } = require('../models/works')
 let { User } = require('../models/users')
+let { Link } = require('../models/links')
+let { linkController } = require('../controllers/link-controller')
 
-let options = {
+const options = {
     projectName: 'REFFER',
     layout: 'default',
     styles: [
         '../stylesheets/style.css',
         '../stylesheets/style-2.css'
-    ]
+    ],
+    scripts: [],
+    graph: false
+}
+
+const allWorks = async (req, res, next) => {
+    try {
+        const works = await Work.find({})
+        return works.map(work => {
+            return {
+                workKey: work.id,
+                workTitle: work.title,
+                workType: work.type,
+                isMine: (req.isAuthenticated() && req.user.works.includes(work.id))
+            }
+        })
+    } catch (error) { console.log(error) }
 }
 
 exports.workController = {
@@ -31,7 +49,9 @@ exports.workController = {
     },
 
     destroy: async (req, res, next) => {
+        req.user.works.splice(req.user.works.indexOf(req.body.workKey.trim()), 1)
         await Work.findOneAndDelete({_id: req.body.workKey.trim()})
+        await User.findByIdAndUpdate({ _id: req.user.id.trim() }, { works: req.user.works })
         req.flash('success', `Work deleted successfully`)
         res.redirect('/works/list')
     },
@@ -44,7 +64,8 @@ exports.workController = {
                     title: 'Add a Work',
                     navAdd: true,
                     navView: false,
-                    workKey: await Work.countDocuments({})
+                    workKey: await Work.countDocuments({}),
+                    graph: false
                 }))
             } catch (err) {
                 next(err)
@@ -58,17 +79,16 @@ exports.workController = {
     view: async (req, res, next) => {
         try {
             let work = await Work.findOne({_id: req.query.workKey.trim()})
-            let isMine = req.isAuthenticated()
-            if (isMine) isMine = req.user.works.includes(work.id)
             res.render('works/view_work', Object.assign(options,{
                 title: "Work Details",
                 workTitle: work.title,
                 workKey: work.id,
                 workBody: work.body,
                 workType: work.type,
-                isMine: isMine,
+                isMine: (req.isAuthenticated() && req.user.works.includes(work.id)),
                 navAdd: false,
                 navView: false,
+                graph: false
             }))
         } catch (err) {
             console.log(err)
@@ -89,7 +109,8 @@ exports.workController = {
                     workType: work.type,
                     isBook: work.type === "Book",
                     isMovie: work.type === "Movie",
-                    isTVShow: work.type === "TV Show"
+                    isTVShow: work.type === "TV Show",
+                    graph: false
                 }))
             } catch (err) {
                 next(err)
@@ -102,22 +123,13 @@ exports.workController = {
 
     listAll: async (req, res, next) => {
         try {
-            const works = await Work.find({})
-            let allWorks = works.map(work => {
-                let isMine = req.isAuthenticated()
-                if (isMine) isMine = req.user.works.includes(work.id)
-                return {
-                    workKey: work.id,
-                    workTitle: work.title,
-                    workType: work.type,
-                    isMine: isMine
-                }
-            })
             res.render('works/list_works', Object.assign(options,{
                 title: "List of Works",
                 navView: true,
                 navAdd: false,
-                workList: allWorks
+                workList: await allWorks(req, res, next),
+                linkList: await linkController.allLinks(req, res, next),
+                graph: true,
             }))
         } catch (err) {
             next(err)
@@ -149,15 +161,41 @@ exports.workController = {
     delete: async (req, res, next) => {
         if (req.isAuthenticated()) {
             try {
-                let work = await Work.findOne({_id: req.query.workKey.trim()})
-                res.render('works/delete_work', Object.assign(options,{
-                    action: "delete",
-                    title: "Delete this Work?",
-                    workTitle: work.title,
-                    workKey: work.id,
-                    workBody: work.body,
-                    workType: work.type
-                }))
+                const links = await Link.find({})
+                let allLinks = links.map(link => {
+                    return {
+                        id: link.id,
+                        source: link.source,
+                        target: link.target,
+                        body: link.body
+                    }
+                })
+                let src = []
+                let tar = []
+                let self = []
+                let workId = req.query.workKey
+                for (let l = 0; l < allLinks.length; l++) {
+                    if (allLinks[l].source.equals(allLinks[l].target)) // skip self-references
+                        self.push(allLinks[l])
+                    else if (allLinks[l].source.equals(workId))
+                        src.push(allLinks[l])
+                    else if (allLinks[l].target.equals(workId))
+                        tar.push(allLinks[l])
+                }
+                if (src.length + tar.length + self.length === 0) {
+                    let work = await Work.findOne({_id: req.query.workKey.trim()})
+                    res.render('works/delete_work', Object.assign(options,{
+                        action: "delete",
+                        title: "Delete this Work?",
+                        workTitle: work.title,
+                        workKey: work.id,
+                        workBody: work.body,
+                        workType: work.type
+                    }))
+                } else {
+                    req.flash('error', 'Cannot delete linked work. Delete links first')
+                    res.redirect('back')
+                }
             } catch (err) {
                 next(err)
             }
@@ -165,7 +203,8 @@ exports.workController = {
             req.flash('error', 'Please log in to access this page')
             res.redirect('../users/login')
         }
-    }
+    },
+    allWorks : allWorks
 }
 
 const getWorkParams = body => {
@@ -175,3 +214,4 @@ const getWorkParams = body => {
         type: body.workType
     }
 }
+

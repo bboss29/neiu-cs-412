@@ -1,0 +1,34 @@
+<table class="table table-hover table-striped" style="margin: auto; max-width: 500px; min-width: content-box"> <!--TODO-->
+    {{#if linkList}}
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Type</th>
+            <th colspan="2">{{#if loggedIn}}Actions{{/if}}</th>
+        </tr>
+        </thead>
+    {{/if}}
+    {{#each linkList}}
+        <tr>
+            <td onclick="window.location='/links/view?linkKey={{ linkKey }}'">{{ linkTitle }}</td>
+            <td onclick="window.location='/links/view?linkKey={{ linkKey }}'">{{ linkType }}</td>
+
+            <td width="24px">
+            {{#if isMine}}
+                <div onclick="window.location='/links/edit?linkKey={{ linkKey }}'">
+                <i data-feather="edit"></i>
+                </div>
+            {{/if}}
+            </td>
+            <td width="24px">
+            {{#if isMine}}
+                <div onclick="window.location='/links/delete?linkKey={{ linkKey }}'">
+                <i data-feather="trash-2"></i>
+                </div>
+            </td>
+            {{/if}}
+        </tr>
+    {{else}}
+        <h2 class="center">There are no links stored</h2>
+    {{/each}}
+</table>

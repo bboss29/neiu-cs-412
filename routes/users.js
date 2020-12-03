@@ -13,7 +13,8 @@ const options = {
     navView: false,
     navLogin: false,
     navRegister: false,
-    navProfile: false
+    navProfile: false,
+    graph: false
 }
 
 router.get('/register', async (req, res, next) => {
@@ -23,7 +24,8 @@ router.get('/register', async (req, res, next) => {
         navView: false,
         navLogin: false,
         navRegister: true,
-        navProfile: false
+        navProfile: false,
+        graph: false
     }))
 })
 router.post('/register', registerValidations, async (req, res, next) => {
@@ -37,7 +39,8 @@ router.get('/login', async (req, res, next) => {
         navView: false,
         navLogin: true,
         navRegister: false,
-        navProfile: false
+        navProfile: false,
+        graph: false
     }))
 })
 router.post('/login', async (req, res, next) =>{

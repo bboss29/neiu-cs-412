@@ -1,0 +1,22 @@
+<form method="post" action="/links/add" class="center"> <!--TODO-->
+    <input type="hidden" name="source" value="{{ srcWorkId }}" />
+    <input type="hidden" name="sourceTitle" value="{{ srcWorkTitle }}" />
+<!--    <input type="text" name="title" placeholder="Title of the Link" required/>-->
+    <div class="m-auto">
+<!--        <select name="ref" required>-->
+<!--            <option value="refs" selected>References</option>-->
+<!--            <option value="refd">Referenced in</option>-->
+<!--        </select>-->
+        <select required disabled>
+            <option value="{{srcWorkId}}">{{srcWorkTitle}}</option>
+        </select>
+        <label for="refWork">references</label>
+        <select name="target" id="refWork" required>
+            {{#each allWorks}}
+                <option value="{{workKey}}">{{workTitle}}</option>
+            {{/each}}
+        </select>
+    </div>
+    <textarea rows="10" cols="40" name="body" placeholder="Details About the Link" required></textarea> <br/>
+    <input class="btn btn-primary" type="submit" value="Create"/>
+</form>

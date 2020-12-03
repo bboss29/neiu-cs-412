@@ -18,6 +18,12 @@ const UserSchema = new Schema({
             type: SchemaTypes.ObjectID,
             ref: 'Work'
         }
+    ],
+    links: [
+        {
+            type: SchemaTypes.ObjectID,
+            ref: 'Link'
+        }
     ]
 })
 

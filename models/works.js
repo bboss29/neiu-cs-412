@@ -1,13 +1,3 @@
-exports.AbstractWorksStore = class   {
-    async close() { }
-    async update(key, title, body, type) { }
-    async create(key, title, body, type) { }
-    async read(key) { }
-    async destroy(key) { }
-    async keyList() { }
-    async count() { }
-}
-
 const mongoose = require('mongoose')
 const WorkSchema = new mongoose.Schema({
     title: {

@@ -1,25 +1,10 @@
-h1, h2 {
-    text-align: center;
+.node {
+    fill: #ccc;
+    stroke: #fff;
+    stroke-width: 2px;
 }
 
-#index_logo {
-    display: block;
-    margin: auto auto auto auto;
-    width: 50%;
-}
-
-#nav {
-    text-align: center;
-}
-
-.center {
-    text-align: center;
-}
-
-ul {
-    padding-left: 0;
-}
-
-li {
-    list-style-type:none;
+.link {
+    stroke: #777;
+    stroke-width: 2px;
 }

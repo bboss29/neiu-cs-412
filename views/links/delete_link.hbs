@@ -1,0 +1,9 @@
+<form method="post" action="/links/delete" class="center"> <!--TODO-->
+    <p>
+        <input type="hidden" name="linkKey" value="{{ linkKey }}" />
+        <input type="hidden" name="action" value="{{ action }}" />
+    </p>
+    <h3>{{ linkTitle }}</h3>
+    <p>{{ linkBody }}</p>
+    <input class="btn btn-danger" type="submit" value="Delete"/>
+</form>

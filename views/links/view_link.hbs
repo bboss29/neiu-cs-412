@@ -1,0 +1,94 @@
+<div class="center"> <!--TODO-->
+<hr/>
+</div>
+
+<table class="table table-hover table-striped m-auto" style="max-width: 500px; min-width: content-box">
+    <thead>
+    <tr>
+        {{#if src}}
+            <th colspan="3">{{workTitle}} is referenced by these works:</th>
+        {{else}}
+            <th colspan="3">{{workTitle}} isn't referenced by other works</th>
+        {{/if}}
+    </tr>
+    </thead>
+    {{#each src}}
+        <tr>
+            <td onclick="window.location='/works/view?workKey={{ target }}'">
+                {{body}}
+            </td>
+            {{#if isMine}}
+                <td width="50px" onclick="window.location='/links/delete?workKey={{ id }}'">
+                <i data-feather="trash"></i>
+                </td>
+            {{else}}
+                <td width="50px" ></td>
+            {{/if}}
+            <td width="50px" onclick="window.location='/works/view?workKey={{ target }}'">
+                <i data-feather="arrow-right"></i>
+            </td>
+        </tr>
+    {{/each}}
+</table>
+
+<table class="table table-hover table-striped m-auto" style="max-width: 500px; min-width: content-box">
+
+    <thead>
+    <tr>
+        {{#if tar}}
+            <th colspan="3">{{workTitle}} makes references to these works:</th>
+        {{else}}
+            <th colspan="3">{{workTitle}} doesn't reference other works</th>
+        {{/if}}
+    </tr>
+    </thead>
+
+    {{#each tar}}
+        <tr>
+            <td onclick="window.location='/works/view?workKey={{ source }}'">
+                {{body}}
+            </td>
+            {{#if isMine}}
+                <td width="50px" onclick="window.location='/links/delete?workKey={{ id }}'">
+                <i data-feather="trash"></i>
+                </td>
+            {{else}}
+                <td width="50px" ></td>
+            {{/if}}
+            <td width="50px" onclick="window.location='/works/view?workKey={{ source }}'">
+                <i data-feather="arrow-right"></i>
+            </td>
+        </tr>
+    {{/each}}
+</table>
+
+<table class="table table-hover table-striped m-auto" style="max-width: 500px; min-width: content-box">
+
+    <thead>
+    <tr>
+        {{#if self}}
+            <th colspan="3">{{workTitle}} makes these references to itself:</th>
+        {{else}}
+            <th colspan="3">{{workTitle}} doesn't reference itself</th>
+        {{/if}}
+    </tr>
+    </thead>
+
+    {{#each self}}
+        <tr>
+            <td onclick="window.location='/works/view?workKey={{ target }}'">
+                {{body}}
+            </td>
+            {{#if isMine}}
+                <td width="50px" onclick="window.location='/links/delete?workKey={{ id }}'">
+                <i data-feather="trash"></i>
+                </td>
+            {{else}}
+                <td width="50px" ></td>
+            {{/if}}
+            <td width="50px" onclick="window.location='/works/view?workKey={{ target }}'">
+                <i data-feather="arrow-right"></i>
+            </td>
+        </tr>
+    {{/each}}
+</table>

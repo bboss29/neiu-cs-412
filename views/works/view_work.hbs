@@ -1,12 +1,16 @@
 <div class="center">
-<h3>{{ workTitle }}</h3>
-<p>{{ workType }}</p>
-<p>{{ workBody }}</p>
-<hr/>
-{{#if isMine}}
-<p>
-    <span><a class="btn btn-primary" href="/works/edit?workKey={{ workKey }}">Update <i data-feather="edit"></i></a></span>
-    <span><a class="btn btn-danger" href="/works/delete?workKey={{ workKey }}">Delete <i data-feather="trash-2"></i></a></span>
-</p>
-{{/if}}
+    <h3>{{ workTitle }}</h3>
+    <p>{{ workType }}</p>
+    <p>{{ workBody }}</p>
+    <span><a class="btn btn-secondary" href="/links/view?workKey={{ workKey }}">View Links <i data-feather="link"></i></a></span>
+    {{#if loggedIn}}
+    <span><a class="btn btn-secondary" href="/links/add?workKey={{ workKey }}">Add a Link <i data-feather="plus"></i></a></span>
+    {{/if}}
+    <hr/>
+    {{#if isMine}}
+    <p>
+        <span><a class="btn btn-primary" href="/works/edit?workKey={{ workKey }}">Update <i data-feather="edit"></i></a></span>
+        <span><a class="btn btn-danger" href="/works/delete?workKey={{ workKey }}">Delete <i data-feather="trash-2"></i></a></span>
+    </p>
+    {{/if}}
 </div>

@@ -10,6 +10,7 @@ const connectFlash = require('connect-flash')
 const passport = require('passport')
 const mongoose = require('mongoose')
 const { User } = require('./models/users')
+const d3 = require('d3')
 
 mongoose.connect(process.env.DB_URL, {
         useNewUrlParser: true,
@@ -24,6 +25,7 @@ const appsupport = require('./appsupport')
 const indexRouter = require('./routes/index')
 const worksRouter = require('./routes/works')
 const usersRouter = require('./routes/users')
+const linksRouter = require('./routes/links')
 
 const app = express()
 exports.app = app
@@ -63,6 +65,7 @@ app.use('/assets/vendor/bootstrap', express.static(path.join(__dirname, 'node_mo
 app.use('/assets/vendor/jquery', express.static(path.join(__dirname, 'node_modules', 'jquery', 'dist')))
 app.use('/assets/vendor/popper.js', express.static(path.join(__dirname, 'node_modules', 'popper.js', 'dist', 'umd')))
 app.use('/assets/vendor/feather-icons', express.static(path.join(__dirname, 'node_modules', 'feather-icons', 'dist')))
+app.use('/assets/vendor/d3', express.static(path.join(__dirname, 'node_modules', 'd3', 'dist')))
 
 app.use((req, res, next) => {
     res.locals.loggedIn = req.isAuthenticated()
@@ -75,6 +78,7 @@ app.use((req, res, next) => {
 app.use('/', indexRouter)
 app.use('/works', worksRouter)
 app.use('/users', usersRouter)
+app.use('/links', linksRouter)
 
 // error handlers
 app.use(appsupport.basicErrorHandler)

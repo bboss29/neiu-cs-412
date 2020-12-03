@@ -1,0 +1,17 @@
+<form method="post" action="/links/edit" class="center"> <!--TODO-->
+    <p>
+        <input type="hidden" name="linkKey" value="{{ linkKey }}" />
+        <input type="hidden" name="action" value="{{ action }}" />
+    </p>
+    <div style="margin: auto auto 10px auto">
+        <input type="text" name="linkTitle" placeholder="Title of the Link" required value="{{ linkTitle }}"/>
+        <select name="linkType" required>
+            <option value="" disabled>Type</option>
+            <option value="Book" {{#if isBook}}selected{{/if}}>Book</option>
+            <option value="Movie" {{#if isMovie}}selected{{/if}}>Movie</option>
+            <option value="TV Show" {{#if isTVShow}}selected{{/if}}>TV Show</option>
+        </select>
+    </div>
+    <textarea rows="10" cols="40" name="linkBody" placeholder="Details About the Link" required>{{ linkBody }}</textarea> <br/>
+    <input class="btn btn-primary" type="submit" value="Update"/>
+</form>

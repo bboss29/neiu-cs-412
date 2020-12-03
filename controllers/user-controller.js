@@ -45,15 +45,21 @@ exports.userController = {
     },
 
     showProfile: async (req, res, next, options) => {
-        res.render('users/profile', Object.assign(options,{
-            title: 'Profile',
-            navAdd: false,
-            navView: false,
-            navLogin: false,
-            navRegister: false,
-            navProfile: true,
-            workList: await workController.listMine(req,res,next)
-        }))
+        if (req.isAuthenticated()) {
+            res.render('users/profile', Object.assign(options, {
+                title: 'Profile',
+                navAdd: false,
+                navView: false,
+                navLogin: false,
+                navRegister: false,
+                navProfile: true,
+                workList: await workController.listMine(req, res, next),
+                graph: false
+            }))
+        } else {
+            req.flash('error', 'Please log in to access this page')
+            res.redirect('../users/login')
+        }
     }
 }
 
