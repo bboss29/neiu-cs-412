@@ -1,38 +1,25 @@
 <div class="container-fluid center">
-    <a class="btn btn-primary m-auto" href="/users/logout">Log Out</a>
+    <div class="m-auto" style="max-width: 500px; min-width: content-box">
+        <div class="card m-auto">
+            <a class="btn btn-primary" href="/users/logout">Log Out</a>
+            <button class="btn btn-info" onclick="$('.collapse').toggle()">
+               Change Username
+            </button>
+            <div class="collapse card-body">
+                <form method="post" action="/users/updateUsername">
+                    <div class="m-auto" style="width: 300px">
+                        <div class="form-inline row">
+                            <input class="form-control" type="text" name="username" placeholder="New Username" required>
+                            <input class="btn btn-primary m-auto" type="submit">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
 <div>
     <h2>My Works</h2>
-    <table class="table table-hover table-striped" style="margin: auto; max-width: 500px; min-width: content-box">
-        {{#if workList}}
-            <thead>
-            <tr>
-                <th>Title</th>
-                <th>Type</th>
-                <th colspan="2">Actions</th>
-            </tr>
-            </thead>
-        {{/if}}
-        {{#each workList}}
-            {{#if workTitle}}
-                <tr>
-                    <td onclick="window.location='/works/view?workKey={{ workKey }}'">{{ workTitle }}</td>
-                    <td onclick="window.location='/works/view?workKey={{ workKey }}'">{{ workType }}</td>
-
-                    <td width="24px">
-                        <div onclick="window.location='/works/edit?workKey={{ workKey }}'">
-                        <i data-feather="edit"></i>
-                        </div>
-                    </td>
-                    <td width="24px">
-                        <div onclick="window.location='/works/delete?workKey={{ workKey }}'">
-                        <i data-feather="trash-2"></i>
-                        </div>
-                    </td>
-                </tr>
-            {{/if}}
-        {{else}}
-            <h2 class="center">There are no works stored</h2>
-        {{/each}}
-    </table>
+    {{> work_table }}
 </div>

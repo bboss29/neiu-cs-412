@@ -1,48 +1,5 @@
-<table class="table table-hover table-striped" style="margin: auto; max-width: 500px; min-width: content-box">
-    {{#if workList}}
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>Type</th>
-            <th colspan="3">{{#if loggedIn}}Actions{{/if}}</th>
-        </tr>
-        </thead>
-    {{/if}}
-    {{#if loggedIn}}
-<!--        <tr>-->
-<!--            <td colspan="5" class="text-center" onclick="window.location='/works/add'">-->
-<!--                Click here to Create a New Work! -->
-<!--            </td>-->
-<!--        </tr>-->
-    {{/if}}
-    {{#each workList}}
-        <tr>
-            <td onclick="window.location='/works/view?workKey={{ workKey }}'">{{ workTitle }}</td>
-            <td onclick="window.location='/works/view?workKey={{ workKey }}'">{{ workType }}</td>
+{{> work_table }}
 
-            <td width="24px">
-            {{#if isMine}}
-                <div onclick="window.location='/works/edit?workKey={{ workKey }}'">
-                <i data-feather="edit"></i>
-                </div>
-            {{/if}}
-            </td>
-            <td width="24px">
-            {{#if isMine}}
-                <div onclick="window.location='/works/delete?workKey={{ workKey }}'">
-                <i data-feather="trash-2"></i>
-                </div>
-            {{/if}}
-            </td>
-            <td width="24px">
-            {{#if ../loggedIn}}
-                <div onclick="window.location='/links/add?workKey={{ workKey }}'">
-                <i data-feather="plus"></i>
-                </div>
-            {{/if}}
-            </td>
-        </tr>
-    {{else}}
-        <h2 class="center">There are no works stored</h2>
-    {{/each}}
-</table>
+{{#if graph}}
+    {{>graph}}
+{{/if}}

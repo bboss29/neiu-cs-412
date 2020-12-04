@@ -5,36 +5,20 @@
       {{#each styles}}
           <link rel="stylesheet" href={{ this }} />
       {{/each}}
-      <!--<link rel="icon" href="data:;base64,=">-->
-
+      <link rel="icon" href="data:;base64,=">
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css"/>
-
-<!--      <script type="text/javascript" src="javascripts/lib/module.js"></script>-->
-<!--      <script type="text/javascript" >
-          // collection.printCollectionInfo()
-          // collection.showWorks()
-          // collection.createWork("show")
-          // collection.createWork("new show")
-          // collection.createWork("another show")
-          // collection.createWork("yet another show")
-          // collection.showWorks()
-          //
-          // collection.createLink("{this explains the connection between these two works}", [0])
-          // collection.linkUp(0, [1])
-          //
-          // collection.createLink("{this explains how these four works are connected}", [0,1])
-          // collection.linkUp(1, [2,3])
-          // collection.showLinks()
-      </script>-->
   </head>
   <body>
-    {{> header }}
-    {{>user_messages}}
-    <div class="container-fluid">
-        {{{ body }}}
+    <div class="root">
+        {{> header }}
+        {{> user_messages }}
+        <div class="container-fluid">
+            {{{ body }}}
+        </div>
     </div>
+    {{> footer }}
   </body>
   <script src="/assets/vendor/jquery/jquery.min.js"></script>
   <script src="/assets/vendor/popper.js/popper.min.js"></script>
@@ -43,8 +27,11 @@
   <script src="/assets/vendor/d3/d3.min.js"></script>
   <script>
       feather.replace()
+      $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+      })
   </script>
 {{#if graph}}
-    {{>graph}}
+    {{>graph_js}}
 {{/if}}
 </html>

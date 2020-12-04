@@ -2,9 +2,9 @@
     <h3>{{ workTitle }}</h3>
     <p>{{ workType }}</p>
     <p>{{ workBody }}</p>
-    <span><a class="btn btn-secondary" href="/links/view?workKey={{ workKey }}">View Links <i data-feather="link"></i></a></span>
+    <span><a class="btn btn-info" href="/links/view?workKey={{ workKey }}">View Links <i data-feather="link"></i></a></span>
     {{#if loggedIn}}
-    <span><a class="btn btn-secondary" href="/links/add?workKey={{ workKey }}">Add a Link <i data-feather="plus"></i></a></span>
+    <span><a class="btn btn-info" href="/links/add?workKey={{ workKey }}">Add a Link <i data-feather="plus"></i></a></span>
     {{/if}}
     <hr/>
     {{#if isMine}}

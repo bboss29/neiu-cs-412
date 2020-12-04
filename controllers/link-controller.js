@@ -1,4 +1,4 @@
-let Link = require('../models/links').Link
+let { Link } = require('../models/links')
 let { User } = require('../models/users')
 let { Work } = require('../models/works')
 let { workController } = require('../controllers/work-controller')
@@ -29,14 +29,6 @@ const allLinks = async (req, res, next) => {
 }
 
 exports.linkController = {
-    update: async (req, res, next) => { //TODO
-        let link = await Link.findOneAndUpdate({_id: req.body.linkKey.trim()}, {
-            body: req.body.linkBody,
-        })
-        req.flash('success', `${link.body} updated successfully`)
-        res.redirect('/links/view?linkKey=' + link.id)
-    },
-
     create: async (req, res, next) => {
         let linkParams = getLinkParams(req.body)
         let link = await Link.create(linkParams)
@@ -52,10 +44,9 @@ exports.linkController = {
         res.redirect('/works/list')
     },
 
-    add: async (req, res, next) => { // TODO
-        if (req.isAuthenticated()) { // req.isAuthenticated()
+    add: async (req, res, next) => {
+        if (req.isAuthenticated()) {
             try {
-                // let aw = await workController.allWorks(req, res, next) // TODO unhandled promise
                 const works = await Work.find({})
                 let allWorks = works.map(work => {
                     let isMine = false
@@ -88,7 +79,7 @@ exports.linkController = {
         }
     },
 
-    view: async (req, res, next) => { // TODO
+    view: async (req, res, next) => {
         try {
             const links = await Link.find({})
             let allLinks = links.map(link => {
@@ -100,33 +91,60 @@ exports.linkController = {
                     isMine: (req.isAuthenticated() && req.user.links.includes(link.id))
                 }
             })
-
+            let workIds = []
             let src = []
             let tar = []
             let self = []
-            // let workIds = []
             let workId = req.query.workKey
             for (let l = 0; l < allLinks.length; l++) {
-                if (allLinks[l].source.equals(allLinks[l].target)) // skip self-references
+                if (allLinks[l].source.equals(allLinks[l].target))
                     self.push(allLinks[l])
                 else if (allLinks[l].source.equals(workId))
                     src.push(allLinks[l])
                 else if (allLinks[l].target.equals(workId))
                     tar.push(allLinks[l])
 
-                // if (workIds.indexOf(allLinks[l].source) === -1)
-                //     workIds.push(allLinks[l].source)
-                // if (workIds.indexOf(allLinks[l].target) === -1)
-                //     workIds.push(allLinks[l].target)
+                if (workIds.indexOf(allLinks[l].source) === -1)
+                    workIds.push(allLinks[l].source)
+                if (workIds.indexOf(allLinks[l].target) === -1)
+                    workIds.push(allLinks[l].target)
             }
+
             if (src.length + tar.length + self.length === 0) {
                 req.flash('error', 'There are no links for this work!')
                 res.redirect('back')
             } else {
                 let work = await Work.findOne({_id : workId})
 
-                res.render('links/view_link', Object.assign(options,{
-                    title: "Link Details",
+                // // TODO
+                // // create list of all works
+                // let workPromises = workIds.map(id => Work.findOne({ _id: id }))
+                // let works = await Promise.all(workPromises)
+                // let allWorks = works.map(work => {
+                //     return {
+                //         workKey: work.id,
+                //         workTitle: work.title,
+                //         workType: work.type,
+                //         isMine: true
+                //     }
+                // })
+                // // access allWorks and map to the links
+                // src = src.map(link => {
+                //     let s = link.source
+                //     let t = link.target
+                //     return {
+                //         id: link.id,
+                //         source: link.source,
+                //         target: link.target,
+                //         body: link.body,
+                //         isMine: link.isMine,
+                //         sourceTitle: link.source.title,
+                //         targetTitle: link.target.title,
+                //     }
+                // })
+
+                res.render('links/list_links', Object.assign(options,{
+                    title: "Link Details for " + work.title,
                     navAdd: false,
                     navView: false,
                     graph: false,
@@ -136,80 +154,17 @@ exports.linkController = {
                     workTitle: work.title,
                     workKey: work.id,
                     workBody: work.body,
-                    workType: work.type
+                    workType: work.type,
+                    test: "Test"
                 }))
             }
-
-
         } catch (err) {
             console.log(err)
             next(err)
         }
     },
 
-    edit: async (req, res, next) => { // TODO
-        if (req.isAuthenticated()) {
-            try {
-                let link = await Link.findOne({_id: req.query.linkKey.trim()})
-                res.render('links/edit_link', Object.assign(options, {
-                    action: "edit",
-                    title: "Update",
-                    linkTitle: link.title,
-                    linkKey: link.id,
-                    linkBody: link.body,
-                    linkType: link.type,
-                    isBook: link.type === "Book",
-                    isMovie: link.type === "Movie",
-                    isTVShow: link.type === "TV Show",
-                    graph: false
-                }))
-            } catch (err) {
-                next(err)
-            }
-        } else {
-            req.flash('error', 'Please log in to access this page')
-            res.redirect('../users/login')
-        }
-    },
-
-    listAll: async (req, res, next) => { // TODO
-        try {
-            res.render('links/list_links', Object.assign(options,{
-                title: "List of Links",
-                navView: true,
-                navAdd: false,
-                linkList: await allLinks(req, res, next),
-                graph: true,
-            }))
-        } catch (err) {
-            next(err)
-        }
-    },
-
-    listMine: async (req, res, next) => { // TODO
-        if (req.isAuthenticated()) {
-            try {
-                let linkIds = req.user.links
-                let linkPromises = linkIds.map(id => Link.findOne({ _id: id }))
-                let links = await Promise.all(linkPromises)
-                return links.map(link => {
-                    return {
-                        source: link.source,
-                        target: link.target,
-                        linkTitle: link.title,
-                        linkBody: link.body
-                    }
-                })
-            } catch (err) {
-                next(err)
-            }
-        } else {
-            req.flash('error', 'Please log in to access this page')
-            res.redirect('../users/login')
-        }
-    },
-
-    delete: async (req, res, next) => { // TODO
+    delete: async (req, res, next) => {
         if (req.isAuthenticated()) {
             try {
                 let link = await Link.findOne({_id: req.query.workKey})
@@ -236,12 +191,9 @@ exports.linkController = {
 
 const getLinkParams = body => {
     return {
-        title: body.title,
         body: body.body,
         source: body.source,
-        sourceTitle: body.sourceTitle,
         target: body.target,
-        targetTitle: body.target
     }
 }
 

@@ -39,7 +39,7 @@ UserSchema.pre('save', async function(next){
     try {
         if (!user.isAdmin) user.isAdmin = false
     } catch (error) {
-        console.log(`Error in hashing password: ${error.message}`)
+        console.log(`Error in creating user`)
     }
 })
 

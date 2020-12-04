@@ -8,7 +8,7 @@ let options = {
       '../stylesheets/style.css',
       '../stylesheets/style-2.css'
     ],
-    title: "Home"
+    title: ""
 }
 
 router.get('/', async function(req, res, next) {

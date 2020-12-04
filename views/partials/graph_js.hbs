@@ -1,0 +1,25 @@
+<script>
+    let width = 640, height = 400;
+
+    let nodes = [
+    {{#each workList}}
+        {
+            id: "{{workTitle}}",
+            x: width/2,
+            y: height,
+            key: "{{workKey}}"
+        },
+    {{/each}}
+    ]
+
+    let links = [
+    {{#each linkList}}
+        {
+            source: "{{source}}",
+            target: "{{target}}",
+            index: 0
+        },
+    {{/each}}
+    ]
+</script>
+<script src="../javascripts/graph.js"></script>

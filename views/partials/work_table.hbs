@@ -1,0 +1,56 @@
+<table class="table table-hover table-striped table-sm" style="margin: auto auto 20px auto; max-width: 500px; min-width: content-box">
+    {{#if workList}}
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Type</th>
+            <th colspan="1"></th>
+            <th colspan="4">{{#if loggedIn}}Actions{{/if}}</th>
+
+        </tr>
+        </thead>
+    {{/if}}
+    {{#if loggedIn}}
+        <!--        <tr>-->
+        <!--            <td colspan="5" class="text-center" onclick="window.location='/works/add'">-->
+        <!--                Click here to Create a New Work!-->
+        <!--            </td>-->
+        <!--        </tr>-->
+    {{/if}}
+    {{#each workList}}
+        <tr>
+            <td onclick="window.location='/works/view?workKey={{ workKey }}'">{{ workTitle }}</td>
+            <td onclick="window.location='/works/view?workKey={{ workKey }}'">{{ workType }}</td>
+
+            <td width="24px" >
+                {{#if isMine}}
+                    <div onclick="window.location='/works/edit?workKey={{ workKey }}'" data-toggle="tooltip" data-placement="top" title="Update">
+                    <i data-feather="edit"></i>
+                    </div>
+                {{/if}}
+            </td>
+            <td width="24px" >
+                {{#if isMine}}
+                    <div onclick="window.location='/works/delete?workKey={{ workKey }}'" data-toggle="tooltip" data-placement="top" title="Delete">
+                    <i data-feather="trash-2"></i>
+                    </div>
+                {{/if}}
+            </td>
+            <td width="24px" >
+                {{#if ../loggedIn}}
+                    <div onclick="window.location='/links/add?workKey={{ workKey }}'" data-toggle="tooltip" data-placement="top" title="Add Link">
+                    <i data-feather="plus"></i>
+                    </div>
+                {{/if}}
+            </td>
+
+            <td width="24px" >
+                <div onclick="window.location='/works/view?workKey={{ workKey }}'" data-toggle="tooltip" data-placement="top" title="View">
+                <i data-feather="arrow-right"></i>
+                </div>
+            </td>
+        </tr>
+    {{else}}
+        <h4 class="center text-muted">There are no works stored</h4>
+    {{/each}}
+</table>

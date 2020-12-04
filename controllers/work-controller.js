@@ -14,6 +14,19 @@ const options = {
     graph: false
 }
 
+const someWorks = async (workIds) => {
+    let workPromises = workIds.map(id => Work.findOne({ _id: id }))
+    let works = await Promise.all(workPromises)
+    return works.map(work => {
+        return {
+            workKey: work.id,
+            workTitle: work.title,
+            workType: work.type,
+            isMine: true
+        }
+    })
+}
+
 const allWorks = async (req, res, next) => {
     try {
         const works = await Work.find({})
@@ -140,15 +153,7 @@ exports.workController = {
         if (req.isAuthenticated()) {
             try {
                 let workIds = req.user.works
-                let workPromises = workIds.map(id => Work.findOne({ _id: id }))
-                let works = await Promise.all(workPromises)
-                return works.map(work => {
-                    return {
-                        workKey: work.id,
-                        workTitle: work.title,
-                        workType: work.type
-                    }
-                })
+                return await someWorks(workIds)
             } catch (err) {
                 next(err)
             }
@@ -204,7 +209,8 @@ exports.workController = {
             res.redirect('../users/login')
         }
     },
-    allWorks : allWorks
+    allWorks: allWorks,
+    someWorks: someWorks
 }
 
 const getWorkParams = body => {

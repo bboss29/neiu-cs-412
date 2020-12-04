@@ -1,8 +1,17 @@
+html, body {
+  height: 100%;
+}
 body {
-  /*max-width: max-content;*/
-  /*min-width: 50%;*/
-  margin: auto;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+.footer {
+  flex-shrink: 0;
+}
+
+.root {
+  background-color: #f1f1f1;
+  flex: 1 0 auto;
 }
 
 a {
@@ -33,4 +42,9 @@ ul {
 
 li {
   list-style-type:none;
+}
+
+table {
+  outline-width: 2px;
+  outline-style: solid;
 }

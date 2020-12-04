@@ -15,19 +15,6 @@ router.get('/view', async (req, res, next) => {
     await linkController.view(req, res, next)
 })
 
-// A route for editing a specific item.
-router.get('/edit', async (req, res, next) => {
-    await linkController.edit(req, res, next)
-})
-router.post('/edit', async (req, res, next) => {
-    await linkController.update(req, res, next)
-})
-
-// A route for viewing all saved items
-router.get('/list', async function(req, res, next) {
-    await linkController.listAll(req, res, next)
-})
-
 // A route for deleting a specific item
 router.get('/delete', async (req, res, next) => {
     await linkController.delete(req, res, next)

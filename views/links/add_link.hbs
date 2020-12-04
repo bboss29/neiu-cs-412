@@ -1,12 +1,6 @@
-<form method="post" action="/links/add" class="center"> <!--TODO-->
+<form method="post" action="/links/add" class="center">
     <input type="hidden" name="source" value="{{ srcWorkId }}" />
-    <input type="hidden" name="sourceTitle" value="{{ srcWorkTitle }}" />
-<!--    <input type="text" name="title" placeholder="Title of the Link" required/>-->
     <div class="m-auto">
-<!--        <select name="ref" required>-->
-<!--            <option value="refs" selected>References</option>-->
-<!--            <option value="refd">Referenced in</option>-->
-<!--        </select>-->
         <select required disabled>
             <option value="{{srcWorkId}}">{{srcWorkTitle}}</option>
         </select>
